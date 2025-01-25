@@ -2,18 +2,6 @@
   "name": "wispe-client",
   "license": "MIT",
   "author": "William Qi",
-  "contributors": [
-    {
-      "name": "Electron React Boilerplate Maintainers",
-      "email": "electronreactboilerplate@gmail.com",
-      "url": "https://electron-react-boilerplate.js.org"
-    },
-    {
-      "name": "Amila Welihinda",
-      "email": "amilajack@gmail.com",
-      "url": "https://github.com/amilajack"
-    }
-  ],
   "main": "./.erb/dll/main.bundle.dev.js",
   "scripts": {
     "build": "concurrently \"npm run build:main\" \"npm run build:renderer\"",
@@ -83,6 +71,7 @@
   },
   "dependencies": {
     "@electron/notarize": "^2.3.2",
+    "@fontsource/inria-sans": "^5.1.1",
     "electron-debug": "^3.2.0",
     "electron-log": "^4.4.8",
     "electron-updater": "^6.1.4",

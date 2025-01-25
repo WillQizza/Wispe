@@ -1,0 +1,19 @@
+.container {
+    margin-right: 20px;
+    text-align: right;
+    cursor: default;
+}
+
+.title {
+    font-size: 4em;
+}
+
+.subtitle {
+    font-size: 1.5em;
+    color: #6D6C6C;
+}
+
+.container h3, .container h4 {
+    margin: 0;
+    padding: 0;
+}

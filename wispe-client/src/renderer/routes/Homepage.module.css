@@ -1,0 +1,42 @@
+.container {
+  min-height: 100vh;
+  height: 100%;
+  width: 100%;
+  background-color: var(--main-background-color);
+  display: flex;
+}
+
+.header {
+  position: absolute;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+}
+
+.mainTextContainer {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  cursor: default;
+}
+
+.mainText {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  text-align: center;
+}
+
+.mainText h1, .mainText h2 {
+  padding: 0;
+  margin: 0;
+}
+
+.mainText h1 {
+  font-size: 8em;
+}
+
+.mainText h2 {
+  font-size: 3em;
+  color: #2B2B2B;
+}

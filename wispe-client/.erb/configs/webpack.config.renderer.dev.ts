@@ -69,7 +69,6 @@ const configuration: webpack.Configuration = {
           {
             loader: 'css-loader',
             options: {
-              api: 'modern-compiler',
               modules: true,
               sourceMap: true,
               importLoaders: 1,
@@ -78,7 +77,7 @@ const configuration: webpack.Configuration = {
           {
             loader: 'sass-loader',
             options: {
-              api: 'modern-compiler'
+              api: 'modern'
             }
           }
         ],

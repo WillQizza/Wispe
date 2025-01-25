@@ -1,6 +1,6 @@
 # Wispe
 
-This is a dashboard application with a C# API web server and also a React Native application. 
+This is a dashboard application with a C# API web server and also a React Electron application.
 
 ## Inspiration
 
