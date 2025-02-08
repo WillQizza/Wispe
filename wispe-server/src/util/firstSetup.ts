@@ -1,5 +1,5 @@
 import { question } from 'readline-sync';
-import { User } from './models/user';
+import { User } from '../models/user';
 import { generatePasswordHash } from './auth';
 
 async function requiresAdminSetup() {
