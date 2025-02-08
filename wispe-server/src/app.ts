@@ -13,6 +13,7 @@ import { router as weatherRouter } from './routes/weather';
 import { router as todoRouter } from './routes/todo';
 import { setupWhiteboard } from './routes/whiteboard';
 import { setup as setupDatabase } from './database';
+import { firstTimeServerCheck } from './firstSetup';
 
 const pinoLogger = pino();
 
@@ -36,6 +37,7 @@ const io = new Server(server, {
 setupWhiteboard(io);
 
 setupDatabase()
+    .then(firstTimeServerCheck)
     .then(() => server.listen(API_PORT, () => {
         pinoLogger.info(`Started listening port ${API_PORT}`);
     }));
