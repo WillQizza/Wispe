@@ -1,5 +1,7 @@
 import { genSalt, hash, compare } from 'bcrypt';
-import { AUTH_PASSWORD_HASH_ROUNDS } from '../config';
+import { AUTH_PASSWORD_HASH_ROUNDS, JWT_BASE64_SECRET, JWT_EXPIRY_SECONDS } from '../config';
+import { sign as jwtSign } from 'jsonwebtoken';
+import { resolve } from 'path';
 
 async function generatePasswordHash(password: string) {
     const salt = await genSalt(AUTH_PASSWORD_HASH_ROUNDS);
@@ -12,7 +14,24 @@ function validatePassword({ password, passwordHash } : { password: string, passw
     return compare(password, passwordHash);
 }
 
+function signJWT(data: object) {
+    return new Promise((res, rej) => {
+        const signingKey = Buffer.from(JWT_BASE64_SECRET, 'base64');
+    
+        jwtSign(data, signingKey, { algorithm: 'HS512', expiresIn: JWT_EXPIRY_SECONDS }, (err, token) => {
+            if (err != null) {
+                rej(err);
+                return;
+            }
+
+            res(token as string);
+        });
+    
+    });
+}
+
 export {
     generatePasswordHash,
-    validatePassword
+    validatePassword,
+    signJWT
 };
