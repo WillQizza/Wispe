@@ -20,3 +20,5 @@ export const POSTGRES_DATABASE = requireEnv('POSTGRES_DATABASE');
 export const AUTH_PASSWORD_HASH_ROUNDS = parseInt(requireEnv('AUTH_PASSWORD_HASH_ROUNDS'));
 export const JWT_BASE64_SECRET = requireEnv('AUTH_JWT_SECRET');
 export const JWT_EXPIRY_SECONDS = parseInt(requireEnv('AUTH_JWT_EXPIRY_SECONDS'));
+export const WEATHER_WEATHERAPI_API_KEY = requireEnv('WEATHER_WEATHERAPI_API_KEY');
+export const WEATHER_WEATHERAPI_CITY = requireEnv('WEATHER_WEATHERAPI_CITY');
