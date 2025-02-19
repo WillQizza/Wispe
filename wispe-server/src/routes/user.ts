@@ -19,7 +19,7 @@ router.get('/users', async (_, res) => {
         displayName: user.displayName
     }));
 
-    res.json(publicUserData);
+    res.json(apiMessage(publicUserData));
 });
 
 // Registration is only allowed when done by an administrator
@@ -131,12 +131,12 @@ router.post('/user', validateInput(updateSettingsSchema), async (req, res) => {
     
     await user.save();
 
-    res.json({
+    res.json(apiMessage({
         id: user.id,
         username: user.username,
         displayName: user.displayName,
         admin: user.admin
-    });
+    }));
 });
 
 router.get('/user', async (req, res) => {
@@ -147,10 +147,10 @@ router.get('/user', async (req, res) => {
         throw new Error('JWT valid but no user correlates to the provided JWT when fetching the user.');
     }
 
-    res.json({
+    res.json(apiMessage({
         id: user.id,
         username: user.username,
         displayName: user.displayName,
         admin: user.admin
-    });
+    }));
 });

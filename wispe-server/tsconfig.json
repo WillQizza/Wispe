@@ -1,8 +1,8 @@
 {
   "compilerOptions": {
     "incremental": true,
-    "target": "es2022",
-    "module": "commonjs",
+    "target": "es6",
+    "module": "ES6",
     "lib": ["es2022"],
     "strict": true,
     "sourceMap": true,
@@ -10,7 +10,9 @@
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
     "resolveJsonModule": true,
-    "types": ["./src/typings/express.d.ts"]
+    "types": ["./src/typings/express.d.ts"],
+    "noEmit": true
   },
-  "exclude": ["test"]
+  "include": ["src", "tests"],
+  "exclude": ["tests"]
 }

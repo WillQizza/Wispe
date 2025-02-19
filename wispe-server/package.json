@@ -3,19 +3,24 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "ts-node ./src/app.ts"
+    "test": "mocha",
+    "dev": "tsx ./src/app.ts"
   },
   "author": "William Qi",
   "license": "MIT",
   "description": "",
   "devDependencies": {
     "@types/bcrypt": "^5.0.2",
+    "@types/chai": "^5.0.1",
     "@types/express": "^5.0.0",
+    "@types/jsonwebtoken": "^9.0.8",
+    "@types/mocha": "^10.0.10",
     "@types/node": "^22.13.1",
     "@types/readline-sync": "^1.4.8",
+    "chai": "^5.2.0",
+    "mocha": "^11.1.0",
     "nodemon": "^3.1.9",
-    "ts-node": "^10.9.2",
+    "tsx": "^4.19.3",
     "typescript": "^5.7.3"
   },
   "dependencies": {
