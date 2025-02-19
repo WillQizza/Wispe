@@ -6,7 +6,7 @@ import { Server } from 'socket.io';
 
 import pinoHttp from 'pino-http';
 import pino from 'pino';
-import { API_PORT, JWT_BASE64_SECRET } from './config';
+import { API_PORT, IN_TEST_ENVIRONMENT, JWT_BASE64_SECRET } from './config';
 
 import { router as userRouter } from './routes/user';
 import { router as calendarRouter } from './routes/calendar';
@@ -17,14 +17,18 @@ import { setupWhiteboard } from './routes/whiteboard';
 import { setup as setupDatabase } from './database';
 import { firstTimeServerCheck } from './util/firstSetup';
 
-const pinoLogger = pino();
+const pinoLogger = pino({
+    level: IN_TEST_ENVIRONMENT ? 'silent' : 'info'
+});
 
 const app = express();
 const server = createServer(app);
 
 // Middleware
 app.use(helmet());
-app.use(pinoHttp());
+app.use(pinoHttp({
+    level: IN_TEST_ENVIRONMENT ? 'silent' : 'info'
+}));
 app.use(json({ limit: '10kb' }));
 
 app.disable('x-powered-by');
@@ -52,4 +56,7 @@ setupDatabase()
     .then(firstTimeServerCheck)
     .then(() => server.listen(API_PORT, () => {
         pinoLogger.info(`Started listening port ${API_PORT}`);
+        app.emit('ready');
     }));
+
+export default app;

@@ -13,6 +13,6 @@
     "types": ["./src/typings/express.d.ts"],
     "noEmit": true
   },
-  "include": ["src", "tests"],
+  "include": ["src", "tests", "src/typings"],
   "exclude": ["tests"]
 }

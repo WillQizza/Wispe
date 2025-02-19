@@ -1,7 +1,8 @@
 {
     "extension": ["ts"],
-    "spec": "tests/**/*.test.ts",
+    "spec": "tests/**/*.ts",
     "node-option": [
-      "import=tsx"
+      "import=tsx",
+      "env-file=test.env"
     ]
   }

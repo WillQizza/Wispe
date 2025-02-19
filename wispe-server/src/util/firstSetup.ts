@@ -1,9 +1,10 @@
 import { question } from 'readline-sync';
 import { User } from '../models/user';
 import { generatePasswordHash } from './auth';
+import { IN_TEST_ENVIRONMENT } from '../config';
 
 async function requiresAdminSetup() {
-    return (await User.count()) === 0;   
+    return !IN_TEST_ENVIRONMENT && ((await User.count()) === 0);   
 };
 
 async function firstTimeServerCheck() {

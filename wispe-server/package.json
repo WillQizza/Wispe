@@ -2,8 +2,9 @@
   "name": "wispe-server",
   "version": "1.0.0",
   "main": "index.js",
+  "type": "module",
   "scripts": {
-    "test": "mocha",
+    "test": "tsx scripts/setup-test-env.ts && mocha --exit",
     "dev": "tsx ./src/app.ts"
   },
   "author": "William Qi",
@@ -17,7 +18,9 @@
     "@types/mocha": "^10.0.10",
     "@types/node": "^22.13.1",
     "@types/readline-sync": "^1.4.8",
+    "@types/superagent": "^8.1.9",
     "chai": "^5.2.0",
+    "chai-http": "^5.1.1",
     "mocha": "^11.1.0",
     "nodemon": "^3.1.9",
     "tsx": "^4.19.3",
@@ -25,6 +28,7 @@
   },
   "dependencies": {
     "@sequelize/postgres": "^7.0.0-alpha.44",
+    "@sequelize/sqlite3": "^7.0.0-alpha.45",
     "ajv": "^8.17.1",
     "bcrypt": "^5.1.1",
     "dotenv": "^16.4.7",
@@ -37,7 +41,8 @@
     "pino-http": "^10.4.0",
     "readline-sync": "^1.4.10",
     "sequelize": "^6.37.5",
-    "socket.io": "^4.8.1"
+    "socket.io": "^4.8.1",
+    "sqlite3": "^5.1.7"
   },
   "packageManager": "pnpm@9.2.0+sha512.98a80fd11c2e7096747762304106432b3ddc67dcf54b5a8c01c93f68a2cd5e05e6821849522a06fb76284d41a2660d5e334f2ee3bbf29183bf2e739b1dafa771"
 }
