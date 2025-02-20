@@ -19,14 +19,15 @@ jobs:
 
       - name: Setup Test Environment Database
         uses: SpicyPizza/create-envfile@v2.0
-        directory: ./wispe-server
         with:
-          NODE_ENV: TEST
-          POSTGRES_USERNAME: ${{ secrets.TEST_DATABASE_USERNAME }}
-          POSTGRES_PASSWORD: ${{ secrets.TEST_DATABASE_PASSWORD }}
-          POSTGRES_HOST: ${{ secrets.TEST_DATABASE_HOST }}
-          POSTGRES_PORT: ${{ secrets.TEST_DATABASE_PORT }}
-          POSTGRES_DATABASE: ${{ secrets.TEST_DATABASE_NAME }}
+          directory: ./wispe-server
+          envkey_NODE_ENV: TEST
+          file_name: test.env
+          envkey_POSTGRES_USERNAME: ${{ secrets.TEST_DATABASE_USERNAME }}
+          envkey_POSTGRES_PASSWORD: ${{ secrets.TEST_DATABASE_PASSWORD }}
+          envkey_POSTGRES_HOST: ${{ secrets.TEST_DATABASE_HOST }}
+          envkey_POSTGRES_PORT: ${{ secrets.TEST_DATABASE_PORT }}
+          envkey_POSTGRES_DATABASE: ${{ secrets.TEST_DATABASE_NAME }}
 
       - name: Run Tests
         working-directory: ./wispe-server
