@@ -122,4 +122,18 @@ describe('User API - User Information', () => {
         
         expect(loginResponse.body.status).to.equal('OK');
     });
+
+    it('should not allow me to update my username to an existing username', async () => {
+        const { jwt } = await createRandomUser({ isAdmin: true });
+        const { username: existingUsername } = await createRandomUser({ isAdmin: false });
+
+        const response = await request.agent(app)
+            .post('/api/user')
+            .set('Authorization', `Bearer ${jwt}`)
+            .send({
+                username: existingUsername
+            });
+
+        expect(response.body.status).to.equal('ERROR');
+    });
 });

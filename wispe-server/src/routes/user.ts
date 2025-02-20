@@ -27,10 +27,7 @@ router.post('/user/register', validateInput(registrationPayloadSchema), async (r
     const { id } = req.auth;
     
     // Can only be done by an admin
-    const user = await User.findByPk(id);
-    if (!user) {
-        throw new Error('JWT valid but no user correlates to the provided JWT when fetching the user.');
-    }
+    const user = await User.findByPk(id) as User;
     if (!user.admin) {
         res.status(401)
             .json(errorApiMessage('Only administrators can perform this action.'));
@@ -102,10 +99,7 @@ router.post('/user/login', validateInput(loginPayloadSchema), async (req, res) =
 router.post('/user', validateInput(updateSettingsSchema), async (req, res) => {
     const { id } = req.auth;
     
-    const user = await User.findByPk(id);
-    if (!user) {
-        throw new Error('JWT valid but no user correlates to the provided JWT when fetching the user.');
-    }
+    const user = await User.findByPk(id) as User;
 
     const { username, password, displayName }: { username: string, password: string, displayName: string } = req.body;
 
@@ -142,10 +136,7 @@ router.post('/user', validateInput(updateSettingsSchema), async (req, res) => {
 router.get('/user', async (req, res) => {
     const { id } = req.auth;
 
-    const user = await User.findByPk(id);
-    if (!user) {
-        throw new Error('JWT valid but no user correlates to the provided JWT when fetching the user.');
-    }
+    const user = await User.findByPk(id) as User;
 
     res.json(apiMessage({
         id: user.id,

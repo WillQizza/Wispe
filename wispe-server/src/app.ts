@@ -16,6 +16,8 @@ import { errorHandler, notFoundHandler } from './routes/errors';
 import { setupWhiteboard } from './routes/whiteboard';
 import { setup as setupDatabase } from './database';
 import { firstTimeServerCheck } from './util/firstSetup';
+import { JwtPayload } from 'jsonwebtoken';
+import { User } from './models/user';
 
 const pinoLogger = pino({
     level: IN_TEST_ENVIRONMENT ? 'silent' : 'info'
@@ -35,7 +37,21 @@ app.disable('x-powered-by');
 
 app.use(expressjwt({
     secret: Buffer.from(JWT_BASE64_SECRET, 'base64'),
-    algorithms: ['HS512']
+    algorithms: ['HS512'],
+    isRevoked: async (req, token) => {
+        if (!token || !(token.payload as JwtPayload).id) {
+            return true;
+        }
+
+        // Ensure user exists
+        const userExistsWithId = (await User.count({
+            where: {
+                id: (token.payload as JwtPayload).id
+            }
+        })) > 0;
+
+        return !userExistsWithId;
+    }
 }).unless({ path: ['/api/user/login'] }));  // Logging in is the only route where JWT is not expected as that's where we hand you YOUR JWT
 
 app.use('/api', userRouter);
