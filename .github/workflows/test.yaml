@@ -1,4 +1,4 @@
-name: CI
+name: Server CI
 on:
   push:
 
@@ -14,10 +14,12 @@ jobs:
           node-version: 22
 
       - name: Install NPM dependencies
+        working-directory: ./wispe-server
         run: npm install
 
       - name: Setup Test Environment Database
         uses: SpicyPizza/create-envfile@v2.0
+        directory: ./wispe-server
         with:
           NODE_ENV: TEST
           POSTGRES_USERNAME: ${{ secrets.TEST_DATABASE_USERNAME }}
@@ -27,4 +29,5 @@ jobs:
           POSTGRES_DATABASE: ${{ secrets.TEST_DATABASE_NAME }}
 
       - name: Run Tests
+        working-directory: ./wispe-server
         run: npm run test
