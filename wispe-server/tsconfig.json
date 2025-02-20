@@ -6,12 +6,12 @@
     "lib": ["es2022"],
     "strict": true,
     "sourceMap": true,
-    "moduleResolution": "node",
+    "moduleResolution": "bundler",
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
     "resolveJsonModule": true,
     "types": ["./src/typings/express.d.ts"],
-    "noEmit": true
+    "outDir": "./dist"
   },
   "include": ["src", "tests", "src/typings"],
   "exclude": ["tests"]

@@ -10,7 +10,3 @@ Wispe is a TypeScript React Electron application with an Express Node.js backend
 - Shared Whiteboard - Intended for silly drawings
 - Shared Gallery - Upload photos to a gallery visible to all authenticated users on your API node
 - Auto-Update - Automatically updates to the latest Github Release
-
-## Inspiration
-
-I made this for my girlfriend as a 1 year milestone gift!

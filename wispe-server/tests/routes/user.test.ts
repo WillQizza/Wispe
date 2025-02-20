@@ -1,14 +1,24 @@
 import 'mocha';
 import { request } from "chai-http";
-import app from '../../src/app';
 import { expect } from 'chai';
-import { createRandomUser } from '../utils';
+import app from '../../src/app';
+import { createRandomUser, createUser } from '../utils';
 
 describe('User API - Login/Registration', () => {
     it('should throw an error when incorrect credentials are provided', async () => {
-        const response = await request.agent(app)
+        // No user exists
+        let response = await request.agent(app)
             .post('/api/user/login')
             .send({ username: '1', password: '1' });
+        
+        expect(response.body.status).to.equal('ERROR');
+        expect(response.statusCode).to.equal(401);
+
+        // Incorrect password
+        const user = await createUser({ username: 'test', displayName: 'test', password: 'test', isAdmin: false });
+        response = await request.agent(app)
+            .post('/api/user/login')
+            .send({ username: user.username, password: '1' });
         
         expect(response.body.status).to.equal('ERROR');
         expect(response.statusCode).to.equal(401);
