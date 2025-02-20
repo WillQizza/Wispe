@@ -1,0 +1,30 @@
+name: CI
+on:
+  push:
+
+jobs:
+  ci:
+    runs-on: self-hosted
+    steps:
+      - uses: actions/checkout@v1
+
+      - name: Install Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Install NPM dependencies
+        run: npm install
+
+      - name: Setup Test Environment Database
+        uses: SpicyPizza/create-envfile@v2.0
+        with:
+          NODE_ENV: TEST
+          POSTGRES_USERNAME: ${{ secrets.TEST_DATABASE_USERNAME }}
+          POSTGRES_PASSWORD: ${{ secrets.TEST_DATABASE_PASSWORD }}
+          POSTGRES_HOST: ${{ secrets.TEST_DATABASE_HOST }}
+          POSTGRES_PORT: ${{ secrets.TEST_DATABASE_PORT }}
+          POSTGRES_DATABASE: ${{ secrets.TEST_DATABASE_NAME }}
+
+      - name: Run Tests
+        run: npm run test
