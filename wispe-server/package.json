@@ -4,8 +4,8 @@
   "main": "dist/app.js",
   "type": "module",
   "scripts": {
-    "test": "tsx scripts/setup-test-env.ts && mocha --exit",
-    "test-coverage": "tsx scripts/setup-test-env.ts && c8 mocha --exit",
+    "test": "tsx scripts/setup-test-env.ts && c8 --check-coverage --lines 90 --branches 90 --functions 90 --statements 90 mocha --exit",
+    "test-coverage-report": "c8 report",
     "build": "tsc",
     "dev": "tsx ./src/app.ts"
   },
