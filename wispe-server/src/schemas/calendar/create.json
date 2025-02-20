@@ -1,0 +1,12 @@
+{
+    "type": "object",
+    "properties": {
+        "time": { "type": "number" },
+        "utcOffset": { "type": "number" },
+        "name": { "type": "string" },
+        "description": { "type": "string" },
+        "intervalType": { "type": "string", "enum": ["yearly", "monthly"] }
+    },
+    "required": ["time", "utcOffset", "name", "description"],
+    "additionalProperties": false
+}

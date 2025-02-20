@@ -54,7 +54,8 @@
     "exclude": [
       "src/util/*.ts",
       "src/*.ts",
-      "src/routes/errors.ts"
+      "src/routes/errors.ts",
+      "tests/**/*"
     ]
   }
 }
