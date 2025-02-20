@@ -28,6 +28,12 @@ jobs:
           envkey_POSTGRES_HOST: ${{ secrets.TEST_DATABASE_HOST }}
           envkey_POSTGRES_PORT: ${{ secrets.TEST_DATABASE_PORT }}
           envkey_POSTGRES_DATABASE: ${{ secrets.TEST_DATABASE_NAME }}
+          envkey_API_PORT: ${{ secrets.TEST_SERVER_API_PORT }}
+          envkey_JWT_SECRET: ${{ secrets.TEST_SERVER_JWT_SECRET }}
+          envkey_AUTH_PASSWORD_HASH_ROUNDS: 1
+          envkey_AUTH_JWT_SECRET: ${{ secrets.TEST_AUTH_JWT_SECRET }}
+          envkey_WEATHER_WEATHERAPI_API_KEY: ${{ secrets.TEST_WEATHER_WEATHERAPI_API_KEY }}
+          envkey_WEATHER_WEATHERAPI_CITY: ${{ secrets.TEST_WEATHER_WEATHERAPI_CITY }}
 
       - name: Run Tests
         working-directory: ./wispe-server
