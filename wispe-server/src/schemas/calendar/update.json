@@ -1,0 +1,15 @@
+{
+    "type": "object",
+    "properties": {
+        "time": { "type": "number" },
+        "utcOffset": { "type": "number" },
+        "name": { "type": "string" },
+        "description": { "type": "string" },
+        "intervalType": { "type": "string", "enum": ["yearly", "monthly"] }
+    },
+    "required": [],
+    "dependentSchemas": {
+        "time": { "required": ["utcOffset"] }
+    },
+    "additionalProperties": false
+}

@@ -26,17 +26,17 @@ describe('Calendar Tests - Calendar Retrieval', () => {
     it('should retrieve all events from the calendar matching the month and year', async () => {
         const events = [
             {
-                date: new Date(2025, 1, 1),
+                date: new Date(2025, 0, 1),
                 name: 'New Years 2025',
                 description: "!"
             },
             {
-                date: new Date(2026, 1, 1),
+                date: new Date(2026, 0, 1),
                 name: 'New Years 2026',
                 description: '!!'
             },
             {
-                date: new Date(2025, 1, 5),
+                date: new Date(2025, 6, 1),
                 name: 'Canada Day',
                 description: 'Ohhh Canadaaaaa'
             }
@@ -55,7 +55,7 @@ describe('Calendar Tests - Calendar Retrieval', () => {
 
     it('should retrieve all yearly reoccurring events and their future events', async () => {
         await CalendarEvent.create({
-                date: new Date(2025, 2, 1),
+                date: new Date(2025, 1, 1),
                 name: 'Valentines Day',
                 description: '!!!',
                 reoccurIntervalType: 'yearly'
@@ -75,7 +75,7 @@ describe('Calendar Tests - Calendar Retrieval', () => {
 
     it('should retrieve all monthy reoccurring events and their future events', async () => {
         await CalendarEvent.create({
-            date: new Date(2025, 2, 1),
+            date: new Date(2025, 1, 1),
             name: '1st of the month! (month >= Feb 2025)',
             description: '!!!',
             reoccurIntervalType: 'monthly'
@@ -93,7 +93,7 @@ describe('Calendar Tests - Calendar Retrieval', () => {
 
     it('should retrieve all yearly reoccurring leap year events and their future events correctly', async () => {
         await CalendarEvent.create({
-            date: new Date(2024, 2, 29),
+            date: new Date(2024, 1, 29),
             name: 'Leap Day!',
             description: '!!!',
             reoccurIntervalType: 'yearly'
@@ -110,7 +110,7 @@ describe('Calendar Tests - Calendar Retrieval', () => {
 
     it('should retrieve all monthly reoccurring leap year events and their future events correctly', async () => {
         await CalendarEvent.create({
-            date: new Date(2024, 1, 29),
+            date: new Date(2024, 0, 29),
             name: '29!!!',
             description: '!!!',
             reoccurIntervalType: 'monthly'
@@ -156,7 +156,7 @@ describe('Calendar Tests - Event Manipulation', () => {
     });
     
     it('should be able to create calendar events', async () => {
-        const date = new Date(2025, 1, 1);
+        const date = new Date(2025, 0, 1);
         const response = await request.agent(app)
             .post('/api/calendar/events')
             .set('Authorization', `Bearer ${ourUser.jwt}`)
@@ -191,7 +191,7 @@ describe('Calendar Tests - Event Manipulation', () => {
     });
 
     it('should not error if given a leap day event', async () => {
-        const date = new Date(2024, 2, 29);
+        const date = new Date(2024, 1, 29);
         const response = await request.agent(app)
             .post('/api/calendar/events')
             .set('Authorization', `Bearer ${ourUser.jwt}`)
@@ -213,7 +213,7 @@ describe('Calendar Tests - Event Manipulation', () => {
 
     it('should be able to retrieve specific calendar events', async () => {
         const event = await CalendarEvent.create({
-            date: new Date(2024, 1, 1),
+            date: new Date(2024, 0, 1),
             name: 'New Years',
             description: '!!!'
         });
@@ -236,35 +236,39 @@ describe('Calendar Tests - Event Manipulation', () => {
 
     it('should be able to modify a calendar event', async () => {
         const event = await CalendarEvent.create({
-            date: new Date(2024, 1, 1),
+            date: new Date(2024, 0, 1),
             name: 'New Years',
             description: '!!!'
         });
 
-        const valentines = new Date(2025, 2, 14);
+        const valentines = new Date(2025, 1, 14);
 
         const response = await request.agent(app)
             .post(`/api/calendar/events/${event.id}`)
+            .set('Authorization', `Bearer ${ourUser.jwt}`)
             .send({
                 time: valentines.getTime(),
                 utcOffset: valentines.getTimezoneOffset(),
                 name: 'Valentines Day',
-                description: 'Wowie'
+                description: 'Wowie',
+                intervalType: 'monthly'
             });
 
         expect(response.body.status).to.equal('OK');
 
         const doubleCheckResponse = await request.agent(app)
-            .get(`/api/calendar/events/${event.id}`);
+            .get(`/api/calendar/events/${event.id}`)
+            .set('Authorization', `Bearer ${ourUser.jwt}`);
 
         expect(doubleCheckResponse.body.data.name).to.equal('Valentines Day');
         expect(doubleCheckResponse.body.data.description).to.equal('Wowie');
     });
 
     it('should error if the specified calendar event we want to modify does not exist', async () => {
-        const valentines = new Date(2025, 2, 14);
+        const valentines = new Date(2025, 1, 14);
         const response = await request.agent(app)
             .post('/api/calendar/events/999')
+            .set('Authorization', `Bearer ${ourUser.jwt}`)
             .send({
                 time: valentines.getTime(),
                 utcOffset: valentines.getTimezoneOffset(),
@@ -278,7 +282,7 @@ describe('Calendar Tests - Event Manipulation', () => {
 
     it('should be able to delete a calendar event', async () => {
         const event = await CalendarEvent.create({
-            date: new Date(2024, 1, 1),
+            date: new Date(2024, 0, 1),
             name: 'New Years',
             description: '!!!'
         });
