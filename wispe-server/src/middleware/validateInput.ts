@@ -1,5 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
-import Ajv, { ErrorObject, Schema, ValidationError } from "ajv";
+import Ajv, { ErrorObject, Schema } from "ajv";
+import { ValidationError } from '../util/errors';
 
 const ajv = new Ajv();
 
@@ -10,7 +11,7 @@ function validateInput(schema: Schema) {
         if (validator(req.body)) {
             next();
         } else {
-            throw new ValidationError(validator.errors as ErrorObject[]);
+            throw new ValidationError('Invalid payload');
         }
     }; 
 }

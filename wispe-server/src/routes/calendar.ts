@@ -5,6 +5,7 @@ import { apiMessage, errorApiMessage } from '../util/apiMessage';
 import { Op } from '@sequelize/core';
 import { validateInput } from '../middleware/validateInput';
 import eventCreationSchema from '../schemas/calendar/create.json';
+import { validateParams } from '../middleware/validateParams';
 
 function getServerTime(now: number, utcOffset: number) {
     const serverTime = new Date(now + utcOffset * 60 * 1000);
@@ -38,7 +39,7 @@ router.post('/calendar/events', validateInput(eventCreationSchema), async (req, 
     }));
 });
 
-router.get('/calendar/events/:eventId', async (req, res) => {
+router.get('/calendar/events/:eventId', validateParams({ eventId: 'number' }), async (req, res) => {
     const { eventId } = req.params;
 
     const event = await CalendarEvent.findByPk(eventId);
@@ -55,7 +56,7 @@ router.get('/calendar/events/:eventId', async (req, res) => {
     }));
 });
 
-router.post('/calendar/events/:eventId', async (req, res) => {
+router.post('/calendar/events/:eventId', validateParams({ eventId: 'number' }), async (req, res) => {
     const { eventId } = req.params;
 
     const event = await CalendarEvent.findByPk(eventId);
@@ -92,7 +93,7 @@ router.post('/calendar/events/:eventId', async (req, res) => {
     }));
 });
 
-router.delete('/calendar/events/:eventId', async (req, res) => {
+router.delete('/calendar/events/:eventId', validateParams({ eventId: 'number' }), async (req, res) => {
     const { eventId } = req.params;
 
     const deleteResults = await CalendarEvent.destroy({
@@ -109,7 +110,7 @@ router.delete('/calendar/events/:eventId', async (req, res) => {
     res.json(apiMessage({}));
 });
 
-router.get('/calendar/:month/:year', async (req, res) => {
+router.get('/calendar/:month/:year', validateParams({ month: 'number', year: 'number' }), async (req, res) => {
     const { month: monthStr, year: yearStr } = req.params;
 
     const month = parseInt(monthStr);

@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from 'express';
 import { errorApiMessage } from '../util/apiMessage';
 import { UnauthorizedError } from 'express-jwt';
-import { ValidationError } from 'ajv';
+import { ValidationError } from '../util/errors';
 
 function notFoundHandler(_: Request, res: Response) {
     res.status(404)
