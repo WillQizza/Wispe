@@ -6,10 +6,6 @@ router.post('/todo', (req, res) => {
     
 });
 
-router.delete('/todo', (req, res) => {
-    
-});
-
 router.get('/todo', (req, res) => {
     
 });

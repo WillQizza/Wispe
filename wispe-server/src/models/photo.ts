@@ -24,8 +24,7 @@ async function setup(sequelize: Sequelize) {
         },
         parentID: {
             type: DataTypes.INTEGER.UNSIGNED,
-            allowNull: true,
-            references: 'PhotoFolder'
+            allowNull: true
         },
         name: {
             type: DataTypes.STRING,
@@ -36,6 +35,9 @@ async function setup(sequelize: Sequelize) {
             allowNull: false
         }
     }, { sequelize, tableName: 'PhotoFolder' });
+
+    await PhotoFolder.belongsTo(PhotoFolder, { foreignKey: 'parentID' });
+
     await Photo.init({
         id: {
             type: DataTypes.INTEGER.UNSIGNED,
