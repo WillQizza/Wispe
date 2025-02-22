@@ -2,14 +2,14 @@ import { CreationOptional, DataTypes, ForeignKey, InferAttributes, InferCreation
 
 class PhotoFolder extends Model<InferAttributes<PhotoFolder>, InferCreationAttributes<PhotoFolder>> {
     declare id: CreationOptional<number>;
-    declare parentID: ForeignKey<PhotoFolder> | null;
+    declare parentID: number | null;
     declare name: string;
     declare lastModified: Date;
 }
 
 class Photo extends Model<InferAttributes<Photo>, InferCreationAttributes<Photo>> {
     declare id: CreationOptional<number>;
-    declare folderID: ForeignKey<PhotoFolder>;
+    declare folderID: number;
     declare data: Blob;
     declare name: string;
     declare uploaded: Date;

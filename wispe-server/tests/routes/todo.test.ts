@@ -42,7 +42,7 @@ describe('Todo Tests', () => {
     it('should be able to retrieve a specific list and its items', async () => {
         const list = await TodoList.create({ name: 'New List' });
         await TodoItem.bulkCreate([
-            { listID: list, name: 'Meow', completed: false, position: 0 }
+            { listId: list.id, name: 'Meow', completed: false, position: 0 }
         ]);
 
         const response = await request.execute(app)
@@ -57,7 +57,7 @@ describe('Todo Tests', () => {
     it('should be able to delete a list with items', async () => {
         const list = await TodoList.create({ name: 'New List' });
         await TodoItem.bulkCreate([
-            { listID: list, name: 'Meow', completed: false, position: 0 }
+            { listId: list.id, name: 'Meow', completed: false, position: 0 }
         ]);
 
         const response = await request.execute(app)
@@ -102,7 +102,7 @@ describe('Todo Tests', () => {
 
     it('should be able to retrieve a specific list item', async () => {
         const list = await TodoList.create({ name: 'New List' });
-        const item = await TodoItem.create({ listID: list, name: 'Meow', completed: false, position: 0 });
+        const item = await TodoItem.create({ listId: list.id, name: 'Meow', completed: false, position: 0 });
 
         const response = await request.execute(app)
             .get(`/api/todo/${list.id}/items/${item.id}`)
@@ -110,12 +110,12 @@ describe('Todo Tests', () => {
 
         expect(response.body.status).to.equal('OK');
         expect(response.body.data.name).to.equal('Meow');
-        expect(response.body.data.listID).to.equal(list.id);
+        expect(response.body.data.id).to.equal(item.id);
     });
 
     it('should be able to update a specific list item', async () => {
         const list = await TodoList.create({ name: 'New List' });
-        const item = await TodoItem.create({ listID: list, name: 'Meow', completed: false, position: 0 });
+        const item = await TodoItem.create({ listId: list.id, name: 'Meow', completed: false, position: 0 });
 
         const response = await request.execute(app)
             .post(`/api/todo/${list.id}/items/${item.id}`)
@@ -131,7 +131,7 @@ describe('Todo Tests', () => {
 
     it('should be able to delete a specific list item', async () => {
         const list = await TodoList.create({ name: 'New List' });
-        const item = await TodoItem.create({ listID: list, name: 'Meow', completed: false, position: 0 });
+        const item = await TodoItem.create({ listId: list.id, name: 'Meow', completed: false, position: 0 });
 
         const response = await request.execute(app)
             .delete(`/api/todo/${list.id}/items/${item.id}`)
@@ -146,9 +146,11 @@ describe('Todo Tests', () => {
     it('should be able to reorder list items before other items', async () => {
         const list = await TodoList.create({ name: 'New List' });
         const items = await TodoItem.bulkCreate([
-            { listID: list, name: 'Meow', completed: false, position: 0 },
-            { listID: list, name: 'Meow', completed: false, position: 1 },
-            { listID: list, name: 'Meow', completed: false, position: 2 }
+            { listId: list.id, name: 'A', completed: false, position: 0 },
+            { listId: list.id, name: 'B', completed: false, position: 1 },
+            { listId: list.id, name: 'C', completed: false, position: 2 },
+            { listId: list.id, name: 'D', completed: false, position: 3 },
+            { listId: list.id, name: 'E', completed: false, position: 4 }
         ]);
 
         await request.execute(app)
@@ -161,14 +163,18 @@ describe('Todo Tests', () => {
         expect(items[2].position).to.equal(0);
         expect(items[0].position).to.equal(1);
         expect(items[1].position).to.equal(2);
+        expect(items[3].position).to.equal(3);
+        expect(items[4].position).to.equal(4);
     });
 
     it('should be able to reorder list items after other items', async () => {
         const list = await TodoList.create({ name: 'New List' });
         const items = await TodoItem.bulkCreate([
-            { listID: list, name: 'Meow', completed: false, position: 0 },
-            { listID: list, name: 'Meow', completed: false, position: 1 },
-            { listID: list, name: 'Meow', completed: false, position: 2 }
+            { listId: list.id, name: 'A', completed: false, position: 0 },
+            { listId: list.id, name: 'B', completed: false, position: 1 },
+            { listId: list.id, name: 'C', completed: false, position: 2 },
+            { listId: list.id, name: 'D', completed: false, position: 3 },
+            { listId: list.id, name: 'E', completed: false, position: 4 }
         ]);
 
         await request.execute(app)
@@ -178,23 +184,25 @@ describe('Todo Tests', () => {
 
         await Promise.all(items.map(i => i.reload()));
 
+        expect(items[0].position).to.equal(3);
         expect(items[1].position).to.equal(0);
         expect(items[2].position).to.equal(1);
-        expect(items[0].position).to.equal(2);
+        expect(items[3].position).to.equal(2);
+        expect(items[4].position).to.equal(4);
     });
 
     it('should throw an error if given an invalid position to reorder to', async () => {
         const list = await TodoList.create({ name: 'New List' });
         const items = await TodoItem.bulkCreate([
-            { listID: list, name: 'Meow', completed: false, position: 0 },
-            { listID: list, name: 'Meow', completed: false, position: 1 },
-            { listID: list, name: 'Meow', completed: false, position: 2 }
+            { listId: list.id, name: 'A', completed: false, position: 0 },
+            { listId: list.id, name: 'B', completed: false, position: 1 },
+            { listId: list.id, name: 'C', completed: false, position: 2 }
         ]);
 
         const response = await request.execute(app)
             .post(`/api/todo/${list.id}/items/${items[0].id}`)
             .set('Authorization', `Bearer ${ourUser.jwt}`)
-            .send({ position: 3 });
+            .send({ position: -1 });
         
         expect(response.body.status).to.equal('ERROR')
     });

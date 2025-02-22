@@ -8,7 +8,7 @@ class TodoList extends Model<InferAttributes<TodoList>, InferCreationAttributes<
 
 class TodoItem extends Model<InferAttributes<TodoItem>, InferCreationAttributes<TodoItem>> {
     declare id: CreationOptional<number>;
-    declare listID: ForeignKey<TodoList>;
+    declare listId: number;
     declare position: number;
     declare name: string;
     declare completed: boolean;
@@ -33,7 +33,7 @@ async function setup(sequelize: Sequelize) {
             autoIncrement: true,
             primaryKey: true
         },
-        listID: {
+        listId: {
             type: DataTypes.INTEGER.UNSIGNED,
             allowNull: false,
             references: {
@@ -60,12 +60,6 @@ async function setup(sequelize: Sequelize) {
         }
     }, {
         sequelize,
-        indexes: [
-            {
-                unique: true,
-                fields: ['listID', 'position']
-            }
-        ],
         hooks: {
             beforeCreate: (item: TodoItem, _) => {
                 if (item.completed) {
