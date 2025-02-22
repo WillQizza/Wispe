@@ -54,6 +54,15 @@ describe('Todo Tests', () => {
         expect(response.body.data.items.length).to.equal(1);
     });
 
+    it('should throw an error if we retrieve a list that does not exist', async () => {
+        const response = await request.execute(app)
+            .get('/api/todo/999')
+            .set('Authorization', `Bearer ${ourUser.jwt}`);
+
+        expect(response.statusCode).to.equal(404);
+        expect(response.body.status).to.equal('ERROR');
+    });
+
     it('should be able to delete a list with items', async () => {
         const list = await TodoList.create({ name: 'New List' });
         await TodoItem.bulkCreate([
@@ -70,8 +79,18 @@ describe('Todo Tests', () => {
         expect(listCount).to.equal(0);
     });
     
+    it('should throw an error if we try to delete a list that does not exist', async () => {
+        const response = await request.execute(app)
+            .delete('/api/todo/999')
+            .set('Authorization', `Bearer ${ourUser.jwt}`);
+
+        expect(response.statusCode).to.equal(404);
+        expect(response.body.status).to.equal('ERROR');
+    });
+
     it('should be able to update a list', async () => {
         const list = await TodoList.create({ name: 'New List' });
+        await TodoItem.create({ listId: list.id, name: 'Item', completed: false, position: 0 });
 
         const response = await request.execute(app)
             .post(`/api/todo/${list.id}`)
@@ -79,13 +98,27 @@ describe('Todo Tests', () => {
             .send({ name: 'Updated Name' });
 
         expect(response.body.status).to.equal('OK');
+
+        // Ensure it did not change the items
+        expect(response.body.data.items.length).to.equal(1);
         
         await list.reload();
         expect(list.name).to.equal('Updated Name');
     });
 
-    it('should be able to add an item to a specific list', async () => {
+    it('should throw an error if we update a list that does not exist', async () => {
+       const response = await request.execute(app)
+            .post('/api/todo/999')
+            .set('Authorization', `Bearer ${ourUser.jwt}`)
+            .send({ name: 'Updated Name' });
+
+        expect(response.statusCode).to.equal(404);
+        expect(response.body.status).to.equal('ERROR'); 
+    });
+
+    it('should be able to add an item to a specific list with items already', async () => {
         const list = await TodoList.create({ name: 'New List' });
+        await TodoItem.create({ name: 'Item', listId: list.id, completed: false, position: 0 });
 
         const response = await request.execute(app)
             .post(`/api/todo/${list.id}/items`)
@@ -97,7 +130,19 @@ describe('Todo Tests', () => {
         expect(response.body.status).to.equal('OK');
 
         const itemCount = await TodoItem.count();
-        expect(itemCount).to.equal(1);
+        expect(itemCount).to.equal(2);
+    });
+
+    it('should throw an error if we try to add an item to a list that does not exist', async () => {
+        const response = await request.execute(app)
+            .post('/api/todo/999/items')
+            .set('Authorization', `Bearer ${ourUser.jwt}`)
+            .send({
+                name: 'Item'
+            });
+
+        expect(response.statusCode).to.equal(404);
+        expect(response.body.status).to.equal('ERROR');
     });
 
     it('should be able to retrieve a specific list item', async () => {
@@ -111,6 +156,30 @@ describe('Todo Tests', () => {
         expect(response.body.status).to.equal('OK');
         expect(response.body.data.name).to.equal('Meow');
         expect(response.body.data.id).to.equal(item.id);
+    });
+
+    it('should throw an error if we try to retrieve a specific list item but the list does not exist', async () => {
+        const list = await TodoList.create({ name: 'New List' });
+        const item = await TodoItem.create({ listId: list.id, name: 'Meow', completed: false, position: 0 });
+
+        const response = await request.execute(app)
+            .get(`/api/todo/${list.id + 1}/items/${item.id}`)
+            .set('Authorization', `Bearer ${ourUser.jwt}`);
+
+        expect(response.statusCode).to.equal(404);
+        expect(response.body.status).to.equal('ERROR');
+    });
+
+    it('should throw an error if we try to retrieve a specific list item but the item does not exist', async () => {
+        const list = await TodoList.create({ name: 'New List' });
+        const item = await TodoItem.create({ listId: list.id, name: 'Meow', completed: false, position: 0 });
+
+        const response = await request.execute(app)
+            .get(`/api/todo/${list.id}/items/${item.id + 1}`)
+            .set('Authorization', `Bearer ${ourUser.jwt}`);
+
+        expect(response.statusCode).to.equal(404);
+        expect(response.body.status).to.equal('ERROR');
     });
 
     it('should be able to update a specific list item', async () => {
@@ -129,6 +198,32 @@ describe('Todo Tests', () => {
         expect(item.completed).to.equal(true);
     });
 
+    it('should throw an error if we try to update a specific list item but the list does not exist', async () => {
+        const list = await TodoList.create({ name: 'New List' });
+        const item = await TodoItem.create({ listId: list.id, name: 'Meow', completed: false, position: 0 });
+
+        const response = await request.execute(app)
+            .post(`/api/todo/${list.id + 1}/items/${item.id}`)
+            .set('Authorization', `Bearer ${ourUser.jwt}`)
+            .send({ name: 'New Name', completed: true });
+
+        expect(response.statusCode).to.equal(404);
+        expect(response.body.status).to.equal('ERROR');
+    });
+
+    it('should throw an error if we try to update a specific list item but the item does not exist', async () => {
+        const list = await TodoList.create({ name: 'New List' });
+        const item = await TodoItem.create({ listId: list.id, name: 'Meow', completed: false, position: 0 });
+
+        const response = await request.execute(app)
+            .post(`/api/todo/${list.id}/items/${item.id + 1}`)
+            .set('Authorization', `Bearer ${ourUser.jwt}`)
+            .send({ name: 'New Name', completed: true });
+
+        expect(response.statusCode).to.equal(404);
+        expect(response.body.status).to.equal('ERROR');
+    });
+
     it('should be able to delete a specific list item', async () => {
         const list = await TodoList.create({ name: 'New List' });
         const item = await TodoItem.create({ listId: list.id, name: 'Meow', completed: false, position: 0 });
@@ -141,6 +236,15 @@ describe('Todo Tests', () => {
 
         const itemCount = await TodoItem.count();
         expect(itemCount).to.equal(0);
+    });
+
+    it('should throw an error if we try to delete a item that does not exist', async () => {
+        const response = await request.execute(app)
+            .delete('/api/todo/999/items/999')
+            .set('Authorization', `Bearer ${ourUser.jwt}`);
+
+        expect(response.statusCode).to.equal(404);
+        expect(response.body.status).to.equal('ERROR');
     });
 
     it('should be able to reorder list items before other items', async () => {

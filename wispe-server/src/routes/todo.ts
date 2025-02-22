@@ -115,11 +115,6 @@ router.post('/todo/:listId/items', validateParams({ listId: 'number' }), validat
         return;
     }
 
-    let requestedPosition = Number.MAX_SAFE_INTEGER;
-    if (req.params.position) {
-        requestedPosition = parseInt(req.params.position);
-    }
-
     const item = await TodoItem.create({
         listId,
         name: req.body.name,
